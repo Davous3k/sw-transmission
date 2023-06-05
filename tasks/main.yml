@@ -1,0 +1,31 @@
+---
+- name: sw-transmission | 1. Add transmissionbt repository from PPA and install its signing key on Ubuntu target
+  ansible.builtin.apt_repository:
+    repo: 'ppa:transmissionbt/ppa'
+    codename: trusty
+
+- name: sw-transmission | 2. Install transmission
+  ansible.builtin.apt:
+    name:
+    - transmission-cli
+    - transmission-common
+    - transmission-daemon
+    state: present
+    update_cache: yes
+
+- name: sw-transmission | 3. Create transmission user
+  ansible.builtin.user:
+    name: transmission
+    group: debian-transmission
+
+- name: sw-transmission | 4. Stop transmission-daemon
+  ansible.builtin.service:
+    name: transmission-daemon
+    state: stopped
+
+- name: sw-transmission | 5. Copy the transmission template file and restart transmission-daemon when changed
+  ansible.builtin.template:
+    src: transmission.j2
+    dest: "{{ transmission_config_location }}"
+  notify:
+    - restart transmission

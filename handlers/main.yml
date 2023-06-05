@@ -1,0 +1,5 @@
+---
+- name: restart transmission
+  ansible.builtin.systemd:
+    state: started
+    name: transmission-daemon

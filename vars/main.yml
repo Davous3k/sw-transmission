@@ -1,0 +1,2 @@
+---
+transmission_config_location: /var/lib/transmission-daemon/info/settings.json
